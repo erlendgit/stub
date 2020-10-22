@@ -35,8 +35,11 @@ def store(request: Request, data: dict):
     with open("%s.content.json" % filename, 'w+') as fh:
         fh.write(json.dumps(data, indent=4))
 
-    with open("%s.headers.json" % filename, 'w+') as fh:
+    with open("%s.header.json" % filename, 'w+') as fh:
         fh.write(json.dumps(dict(request.headers.items()), indent=4))
+
+    with open("%s.query.json" % filename, 'w+') as fh:
+        fh.write(json.dumps(dict(request.query_params.items()), indent=4))
 
 
 if __name__ == "__main__":
