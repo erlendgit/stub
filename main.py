@@ -25,7 +25,7 @@ async def good_request(request: Request, data: dict = Body(...)):
 
 @app.post('/status/{status_code}')
 async def specific_request(status_code: int = Path(...),
-                           msg: Optional[str] = Query(...)):
+                           msg: Optional[str] = Query(None)):
     raise HTTPException(status_code=status_code, detail=msg or 'Testing error response')
 
 
