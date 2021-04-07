@@ -29,6 +29,18 @@ async def specific_request(status_code: int = Path(...),
     raise HTTPException(status_code=status_code, detail=msg or 'Testing error response')
 
 
+@app.post('/{path:path}')
+async def any_request(request: Request, path: str = Path(...)):
+    body = await request.json()
+    store(request, {
+        '_path': path,
+        '_content': body
+    })
+    return {
+        'detail': 'OK'
+    }
+
+
 def store(request: Request, data: dict):
     filename = 'log/{timestamp}'.format(timestamp=datetime.now().timestamp())
 
@@ -45,4 +57,4 @@ def store(request: Request, data: dict):
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=8080)
