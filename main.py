@@ -5,7 +5,7 @@ from typing import Optional
 from fastapi import FastAPI, HTTPException
 from fastapi.params import Path, Query, Body
 from starlette.requests import Request
-from starlette.responses import RedirectResponse
+from starlette.responses import RedirectResponse, JSONResponse
 
 app = FastAPI(title="Stub")
 
@@ -21,6 +21,30 @@ async def good_request(request: Request, data: dict = Body(...)):
     return {
         'detail': 'OK'
     }
+
+
+@app.get('/status/{status_code}/{path:path}')
+async def any_request(request: Request, status_code: int = Path(...), path: str = Path(...)
+                      ):
+    store(request, {
+        '_status_code': status_code,
+        '_path': path,
+        '_param': request.query_params.multi_items()
+    })
+    return JSONResponse({
+        'detail': 'OK'
+    }, status_code=status_code)
+
+
+@app.get('/status/{status_code}')
+async def specific_request(request: Request,
+                           status_code: int = Path(...),
+                           msg: Optional[str] = Query(None)):
+    store(request, {
+        '_status_code': status_code,
+        '_param': request.query_params.multi_items()
+    })
+    return JSONResponse({'detail': msg or 'Testing error response'}, status_code=status_code)
 
 
 @app.post('/status/{status_code}')
